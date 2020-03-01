@@ -1,0 +1,17 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@antv/g6": "^3.3.6",
+    "@vue/cli-service": "^4.2.3",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "scripts": {
+    "build": "vue-cli-service build --dest ui --target wc --name plugin-cluster index.vue"
+  },
+  "author": "",
+  "license": "ISC"
+}
