@@ -122,5 +122,4 @@ export default {
 </script>
 
 <style>
-@import url("/iview.css");
 </style>

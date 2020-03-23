@@ -27,10 +27,10 @@ const (
 
 var (
 	config = struct {
-		Master     string
-		ListenAddr string
+		OriginServer string
+		ListenAddr   string
 	}{}
-	slaves     = sync.Map{}
+	edges      = sync.Map{}
 	masterConn *net.TCPConn
 )
 
@@ -45,9 +45,9 @@ func init() {
 	})
 }
 func run() {
-	if config.Master != "" {
+	if config.OriginServer != "" {
 		OnSubscribeHooks.AddHook(onSubscribe)
-		addr, err := net.ResolveTCPAddr("tcp", config.Master)
+		addr, err := net.ResolveTCPAddr("tcp", config.OriginServer)
 		if MayBeError(err) {
 			return
 		}
@@ -67,12 +67,12 @@ func readMaster(addr *net.TCPAddr) {
 	for {
 		if masterConn, err = net.DialTCP("tcp", nil, addr); !MayBeError(err) {
 			reader := bufio.NewReader(masterConn)
-			log.Printf("connect to master %s reporting", config.Master)
+			log.Printf("connect to master %s reporting", config.OriginServer)
 			for report(); err == nil; {
 				if cmd, err = reader.ReadByte(); !MayBeError(err) {
 					switch cmd {
 					case MSG_SUMMARY: //收到主服务器指令，进行采集和上报
-						log.Println("receive summary request from master")
+						log.Println("receive summary request from OriginServer")
 						if cmd, err = reader.ReadByte(); !MayBeError(err) {
 							if cmd == 1 {
 								Summary.Add()
@@ -86,7 +86,7 @@ func readMaster(addr *net.TCPAddr) {
 			}
 		}
 		t := 5 + rand.Int63n(5)
-		log.Printf("reconnect to master %s after %d seconds", config.Master, t)
+		log.Printf("reconnect to OriginServer %s after %d seconds", config.OriginServer, t)
 		time.Sleep(time.Duration(t) * time.Second)
 	}
 }
@@ -120,7 +120,7 @@ func orderReport(conn io.Writer, start bool) {
 
 //通知从服务器需要上报或者关闭上报
 func onSummary(start bool) {
-	slaves.Range(func(k, v interface{}) bool {
+	edges.Range(func(k, v interface{}) bool {
 		orderReport(v.(*net.TCPConn), start)
 		return true
 	})

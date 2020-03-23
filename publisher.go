@@ -47,7 +47,7 @@ func (p *Receiver) readAVPacket(avType byte) (av *avformat.AVPacket, err error) 
 }
 
 func PullUpStream(streamPath string) {
-	addr, err := net.ResolveTCPAddr("tcp", config.Master)
+	addr, err := net.ResolveTCPAddr("tcp", config.OriginServer)
 	if MayBeError(err) {
 		return
 	}

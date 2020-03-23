@@ -104,12 +104,12 @@ func process(conn net.Conn) {
 			if err = json.Unmarshal(bytes, summary); err == nil {
 				summary.Address = connAddr
 				Summary.Report(summary)
-				if _, ok := slaves.Load(connAddr); !ok {
-					slaves.Store(connAddr, conn)
+				if _, ok := edges.Load(connAddr); !ok {
+					edges.Store(connAddr, conn)
 					if Summary.Running() {
 						orderReport(io.Writer(conn), true)
 					}
-					defer slaves.Delete(connAddr)
+					defer edges.Delete(connAddr)
 				}
 			}
 		default:
