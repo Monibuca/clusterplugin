@@ -6,7 +6,7 @@
   "dependencies": {},
   "devDependencies": {
     "@antv/g6": "^3.3.6",
-    "@vue/cli-service": "^4.2.3",
+    "@vue/cli-service": "^5.0.8",
     "vue-template-compiler": "^2.6.11"
   },
   "scripts": {
